@@ -36,6 +36,22 @@ class Grid:
         x, y = self._wrap(*coords)
         return self.positions[x, y]
 
+    def move(self,
+             agent_id: int,
+             old: tuple[int, int],
+             delta: tuple[int, int]) -> tuple[bool, tuple[int, int]]:
+
+        ox, oy = self._wrap(*old)
+        nx, ny = self._wrap(ox + delta[0], oy + delta[1])
+
+        if self.positions[nx, ny] == 0:
+            self.positions[ox, oy] = 0
+            self.positions[nx, ny] = agent_id
+
+            return True, (nx, ny)
+        else:
+            return False, (nx, ny)
+
     def neighborhood(self, coords: Tuple[int, int], radius: int = 1) -> List[int]:
         neighbors: list[int] = []
 

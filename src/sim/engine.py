@@ -1,7 +1,8 @@
 import numpy as np
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional
 from src.core.agent import Agent
 from src.core.grid import Grid
+from src.sim.rules import collision_rule
 
 
 class Engine:
@@ -26,6 +27,27 @@ class Engine:
             self.grid.add(tmp_agent.get_id(), tmp_agent.get_position())
             self.agents[tmp_agent.get_id()] = tmp_agent
             self.max_id += 1
+
+    def step_move(
+        self, agent: Agent, delta_movement: tuple[int, int]
+    ) -> Optional[tuple[int, int]]:
+        success, new_coords = self.grid.move(
+            agent_id=agent.get_id(), old=agent.get_position(), delta=delta_movement
+        )
+        if success:
+            agent.update_position(new_coords=new_coords)
+            return None
+        else:
+            collided_agent_id = self.grid.check_position(new_coords)
+            if agent.get_id() != collided_agent_id:
+                collision_rule(agent_a=agent, agent_b=self.agents[collided_agent_id])
+                return new_coords
+            return None
+
+    def simulate_step(self):
+        for agent_id, agent in self.agents.items():
+            dx, dy = np.random.choice([-1, 0, 1], size=2)
+            self.step_move(agent, (dx, dy))
 
     def get_agents(self) -> List[Agent]:
         return list(self.agents.values())
