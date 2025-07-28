@@ -6,10 +6,9 @@ if __name__ == "__main__":
 
     print(eng.get_agent_positions())
     agents = eng.get_agents()
-    # for agent in agents:
-    #     print(agent)
 
-    for agent in agents:
-        if len(eng.get_agent_neighbors(agent.get_id())) != 0:
-            print(agent)
-            print(eng.get_agent_neighbors(agent.get_id()))
+    for epoch in range(100):
+        eng.simulate_step()
+        print(f"Epoch {epoch}: alive = {len(eng.agents)}")
+
+    print(eng.get_agent_positions())
