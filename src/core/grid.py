@@ -1,5 +1,4 @@
 import numpy as np
-from typing import List, Tuple, Sequence, Optional
 
 
 class Grid:
@@ -18,10 +17,10 @@ class Grid:
         self.height = height
         self.positions = np.zeros((height, width), dtype=int)
 
-    def _wrap(self, x: int, y: int) -> Tuple[int, int]:
+    def _wrap(self, x: int, y: int) -> tuple[int, int]:
         return x % self.height, y % self.width
 
-    def add(self, agent_id: int, coords: Tuple[int, int]) -> Tuple[int, int]:
+    def add(self, agent_id: int, coords: tuple[int, int]) -> tuple[int, int]:
         x = int(np.round(coords[0]))
         y = int(np.round(coords[1]))
 
@@ -64,7 +63,7 @@ class Grid:
         else:
             return False, (nx, ny)
 
-    def neighborhood(self, coords: Tuple[int, int], radius: int = 1) -> List[int]:
+    def neighborhood(self, coords: tuple[int, int], radius: int = 1) -> list[int]:
         neighbors: list[int] = []
 
         x = coords[0]

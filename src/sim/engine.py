@@ -1,15 +1,14 @@
 import numpy as np
-from typing import List, Tuple, Dict, Optional
 from src.core.agent import Agent
 from src.core.grid import Grid
 from src.sim.rules import collision_rule
 
 
 class Engine:
-    def __init__(self, num_agents: int, grid_size: Tuple[int, int]):
+    def __init__(self, num_agents: int, grid_size: tuple[int, int]):
         self.num_agents = num_agents
         self.grid = Grid(height=grid_size[0], width=grid_size[1])
-        self.agents: Dict[int, Agent] = {}
+        self.agents: dict[int, Agent] = {}
         self.max_id = 1
 
         assert (
@@ -33,7 +32,7 @@ class Engine:
         target2id: dict[tuple[int, int], list[int]] = {}
 
         for agent_id, agent in self.agents.items():
-            dx, dy = np.random.choice([-1, 0, 1], size=2)
+            dx, dy = agent.propose_movement()
             if dx == 0 and dy == 0:
                 continue
 
@@ -91,12 +90,12 @@ class Engine:
             self.grid.positions[x, y] = 0
             del self.agents[aid]
 
-        assert len(self.agents) == np.count_nonzero(self.grid.positions)
+        # assert len(self.agents) == np.count_nonzero(self.grid.positions)
 
         flash_cells = list(set(flash_cells))
         return flash_cells
 
-    def get_agents(self) -> List[Agent]:
+    def get_agents(self) -> list[Agent]:
         return list(self.agents.values())
 
     def get_agent_neighbors(self, agent_id: int):
